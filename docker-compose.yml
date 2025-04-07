@@ -1,0 +1,18 @@
+# Author: Chris Ward <chris@calmrat.com.>
+# Description: Docker Compose file for Krypto Explorer
+# License: MIT
+
+version: "3.13"
+
+services:
+  krypto-explorer:
+    build: .
+    container_name: krypto-explorer
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - ./krypto-explorer/data/cache:/app/krypto-explorer/data/cache
+      - ./logs:/app/logs
+    restart: always

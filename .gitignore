@@ -1,0 +1,102 @@
+# ==============================
+# 🚫 Global ignores
+# ==============================
+
+
+# ==============================
+# 🌍 Universal OS-specific ignores
+# ==============================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.nfs*
+
+# ==============================
+# 🐍 Python-specific ignores
+# ==============================
+
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment files
+.env
+.venv/
+venv/
+Pipfile.lock
+poetry.lock
+
+# ==============================
+# 💻 IDE / Editor ignores
+# ==============================
+
+# VS Code
+# .vscode/
+*.code-workspace
+
+# JetBrains (PyCharm, WebStorm, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# ==============================
+# 🔧 Project-specific ignores
+# ==============================
+
+# Ignore local user-defined configuration
+.config/
+.config/*
+config.toml
+
+# Ignore DuckDB cache and other generated data
+#.data/
+#data/
+cache/
+backups/
+logs/
+#db/
+
+# Ignore log files
+*.log
+
+# Ignore Logfile local storage
+.logfire/
+
+# Ignore backup files
+*.bak
+*.swp
+
+# ==============================
+# 🚀 Deployment / Build ignores
+# ==============================
+
+# Byte-compiled / packaged
+dist/
+build/
+*.egg-info/
+*.manifest
+*.spec
+
+# Docker
+docker-compose.override.yml
