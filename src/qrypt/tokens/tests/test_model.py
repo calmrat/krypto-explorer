@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
 """
-Qrypto CLI
+Qrypto - Token Models - Tests
 """

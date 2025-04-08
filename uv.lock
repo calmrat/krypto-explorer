@@ -464,45 +464,6 @@ wheels = [
 ]
 
 [[package]]
-name = "krypto-explorer"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "aiocache" },
-    { name = "aiohttp" },
-    { name = "asyncio" },
-    { name = "click" },
-    { name = "duckdb" },
-    { name = "fastapi" },
-    { name = "httpx" },
-    { name = "ipdb" },
-    { name = "pandas" },
-    { name = "python-dotenv" },
-    { name = "redis" },
-    { name = "sqlalchemy" },
-    { name = "streamlit" },
-    { name = "uvicorn" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "aiocache", specifier = ">=0.12.3" },
-    { name = "aiohttp", specifier = ">=3.11.16" },
-    { name = "asyncio", specifier = ">=3.4.3" },
-    { name = "click", specifier = ">=8.1.3" },
-    { name = "duckdb", specifier = ">=1.2.1" },
-    { name = "fastapi", specifier = ">=0.115.0" },
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "ipdb", specifier = ">=0.13.13" },
-    { name = "pandas", specifier = ">=2.2.3" },
-    { name = "python-dotenv", specifier = ">=1.1.0" },
-    { name = "redis", specifier = ">=5.2.1" },
-    { name = "sqlalchemy", specifier = ">=2.0.40" },
-    { name = "streamlit", specifier = ">=1.44.1" },
-    { name = "uvicorn", specifier = ">=0.18.3" },
-]
-
-[[package]]
 name = "markupsafe"
 version = "3.0.2"
 source = { registry = "https://pypi.org/simple" }
@@ -901,6 +862,45 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f8/bf/abbd3cdfb8fbc7fb3d4d38d320f2441b1e7cbe29be4f23797b4a2b5d8aac/pytz-2025.2.tar.gz", hash = "sha256:360b9e3dbb49a209c21ad61809c7fb453643e048b38924c765813546746e81c3", size = 320884 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/81/c4/34e93fe5f5429d7570ec1fa436f1986fb1f00c3e0f43a589fe2bbcd22c3f/pytz-2025.2-py2.py3-none-any.whl", hash = "sha256:5ddf76296dd8c44c26eb8f4b6f35488f3ccbf6fbbd7adee0b7262d43f0ec2f00", size = 509225 },
+]
+
+[[package]]
+name = "qrypt"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "aiocache" },
+    { name = "aiohttp" },
+    { name = "asyncio" },
+    { name = "click" },
+    { name = "duckdb" },
+    { name = "fastapi" },
+    { name = "httpx" },
+    { name = "ipdb" },
+    { name = "pandas" },
+    { name = "python-dotenv" },
+    { name = "redis" },
+    { name = "sqlalchemy" },
+    { name = "streamlit" },
+    { name = "uvicorn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aiocache", specifier = ">=0.12.3" },
+    { name = "aiohttp", specifier = ">=3.11.16" },
+    { name = "asyncio", specifier = ">=3.4.3" },
+    { name = "click", specifier = ">=8.1.3" },
+    { name = "duckdb", specifier = ">=1.2.1" },
+    { name = "fastapi", specifier = ">=0.115.0" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "ipdb", specifier = ">=0.13.13" },
+    { name = "pandas", specifier = ">=2.2.3" },
+    { name = "python-dotenv", specifier = ">=1.1.0" },
+    { name = "redis", specifier = ">=5.2.1" },
+    { name = "sqlalchemy", specifier = ">=2.0.40" },
+    { name = "streamlit", specifier = ">=1.44.1" },
+    { name = "uvicorn", specifier = ">=0.18.3" },
 ]
 
 [[package]]

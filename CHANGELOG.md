@@ -1,12 +1,13 @@
-# Upgatez API (Unofficial) Changelog  
+# Qrypto Changelog  
 
 ## v0.1.0 - Initial Release  
 
-### New Features  
+### Added
 - Enabled uv environments
 - Added project stubs.  
+- coingecko api adapter with initially required endpoint support added
 
-### Bug Fixes  
+### Fixed
 - None.  
 
 ### Known Issues  

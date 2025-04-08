@@ -1,5 +1,5 @@
 # Author: Chris Ward <chris@calmrat.com.>
-# Description: Dockerfile for Krypto Explorer
+# Description: Dockerfile for Qrypto
 # License: MIT
 
 # Use official Python image
@@ -26,4 +26,4 @@ EXPOSE 5000
 
 # Start services
 # FastAPI entrypoint
-CMD ["python", "krypto-explorer/main.py"]
+CMD ["python", "qrypto/main.py"]

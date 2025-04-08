@@ -1,10 +1,9 @@
-# 🪙 Crypto Records Manager
+# 🪙 Qrypto - A Crypto Records Manager UI 🚀
 
-A containerized web application for managing cryptocurrency records using FastAPI, Streamlit, PostgreSQL, Redis, and the CoinGecko API.
-
+A containerized web application for managing cryptocurrency records using FastAPI, Streamlit, PostgreSQL, Redis, and the CoinGecko API. 
 ---
 
-## 🚀 Features
+## 📻 Features
 
 - CRUD API for crypto records
 - CoinGecko API integration for symbol verification and metadata
@@ -29,13 +28,13 @@ A containerized web application for managing cryptocurrency records using FastAP
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/calmrat/krypto-explorer.git
-   cd krypto-explorer
+   git clone https://github.com/calmrat/qrypto.git
+   cd qrypto
 
 
 ## 🌞 Setup (uv)
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/calmrat/krypto-explorer.git
-   cd krypto-explorer
+   git clone https://github.com/calmrat/qrypto.git
+   cd qrypto
    uv sync
