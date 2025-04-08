@@ -28,6 +28,7 @@ from qrypt.tokens.services.coingecko.constants import (
     HEADER_ACCEPT_JSON,
 )
 from qrypt.tokens.services.coingecko.strategies import (
+    EndpointCoinsListStrategy,
     EndpointCoinsMarketDataStrategy,
     EndpointSimpleSupportedVsCurrenciesStrategy,
 )
@@ -54,6 +55,7 @@ class CoinGeckoAPIv3(CoinGeckoAPI):
 
     simple_supported_vs_currencies: EndpointSimpleSupportedVsCurrenciesStrategy
     coins_markets_data: EndpointCoinsMarketDataStrategy
+    coins_list: EndpointCoinsListStrategy
 
 
 class CoinGeckoAdapter:
@@ -87,6 +89,14 @@ class CoinGeckoAdapter:
                 coins_markets_data=EndpointCoinsMarketDataStrategy(
                     base_url=self.base_url,
                     endpoint="coins/markets",
+                    method="GET",
+                    headers=HEADER_ACCEPT_JSON,
+                    timeout=self.timeout,
+                ),
+                # Create the coins list endpoint
+                coins_list=EndpointCoinsListStrategy(
+                    base_url=self.base_url,
+                    endpoint="coins/list",
                     method="GET",
                     headers=HEADER_ACCEPT_JSON,
                     timeout=self.timeout,

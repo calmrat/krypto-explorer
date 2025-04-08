@@ -19,7 +19,10 @@ from typing import Optional
 
 import aiohttp
 
-from qrypt.tokens.services.coingecko.constants import DEFAULT_TIMEOUT_SECONDS
+from qrypt.tokens.services.coingecko.constants import (
+    DEFAULT_TIMEOUT_SECONDS,
+    HEADER_ACCEPT_JSON,
+)
 
 
 @dataclass
@@ -31,7 +34,7 @@ class EndpointStrategyBase(ABC):
     base_url: str
     endpoint: str
     method: str
-    headers: dict
+    headers: dict = field(default_factory=dict)
     params: dict = field(default_factory=dict)
     data: dict = field(default_factory=dict)
     timeout: int = DEFAULT_TIMEOUT_SECONDS
@@ -62,7 +65,7 @@ class EndpointStrategyBase(ABC):
 
     async def _get(
         self,
-        headers: dict = dict(),
+        headers: dict = HEADER_ACCEPT_JSON,
         params: dict = dict(),
         data: dict = dict(),
         timeout: int = DEFAULT_TIMEOUT_SECONDS,
@@ -157,6 +160,26 @@ class EndpointCoinsMarketDataStrategy(EndpointStrategyBase):
         :return: The supported vs currencies
         """
         print("Fetching Coin Market Data from CoinGecko")
+        return await self._get(params=params, data=data, timeout=timeout)
+
+
+@dataclass
+class EndpointCoinsListStrategy(EndpointStrategyBase):
+    """
+    Endpoint to get the list of coins from CoinGecko
+    """
+
+    async def fetch(
+        self,
+        params: dict = dict(),
+        data: dict = dict(),
+        timeout: int = DEFAULT_TIMEOUT_SECONDS,
+    ) -> Optional[dict]:
+        """
+        Fetch the list of coins from CoinGecko
+        :return: The list of coins (with meta data)
+        """
+        print("Fetching Coin List from CoinGecko")
         return await self._get(params=params, data=data, timeout=timeout)
 
 
