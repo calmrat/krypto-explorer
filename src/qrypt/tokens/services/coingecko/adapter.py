@@ -21,16 +21,16 @@ Cache
 
 """
 
-import asyncio
 from dataclasses import dataclass
 
+from qrypt.tokens.services.coingecko.constants import (
+    DEFAULT_TIMEOUT_SECONDS,
+    HEADER_ACCEPT_JSON,
+)
 from qrypt.tokens.services.coingecko.strategies import (
     EndpointCoinsMarketDataStrategy,
     EndpointSimpleSupportedVsCurrenciesStrategy,
 )
-
-# Declare constants
-DEFAULT_TIMEOUT_SECONDS: int = 10
 
 # Base URL for CoinGecko API v3
 API_URL_BASE_v3: str = "https://api.coingecko.com/api/v3"
@@ -59,7 +59,7 @@ class CoinGeckoAPIv3(CoinGeckoAPI):
 class CoinGeckoAdapter:
     """CoinGecko Adapter"""
 
-    api: CoinGeckoAPI
+    api: CoinGeckoAPIv3
     base_url: str
     timeout: int
 
@@ -70,6 +70,9 @@ class CoinGeckoAdapter:
         self.timeout = timeout
 
         if self.base_url == API_URL_BASE_v3:
+            # Initialize the API with the v3 endpoints
+
+            # Create the API object with the v3 endpoints
             self.api = CoinGeckoAPIv3(
                 base_url=self.base_url,
                 timeout=self.timeout,
@@ -77,37 +80,17 @@ class CoinGeckoAdapter:
                     base_url=self.base_url,
                     endpoint="simple/supported_vs_currencies",
                     method="GET",
-                    headers={"accept": "application/json"},
-                    params=dict(),
-                    data=dict(),
+                    headers=HEADER_ACCEPT_JSON,
                     timeout=self.timeout,
                 ),
+                # Create the coins market data endpoint
                 coins_markets_data=EndpointCoinsMarketDataStrategy(
                     base_url=self.base_url,
                     endpoint="coins/markets",
                     method="GET",
-                    headers={"accept": "application/json"},
-                    params=dict(),
-                    data=dict(),
+                    headers=HEADER_ACCEPT_JSON,
                     timeout=self.timeout,
                 ),
             )
         else:
             raise ValueError(f"Unsupported API URL: {self.base_url}")
-
-
-if __name__ == "__main__":
-    client = CoinGeckoAdapter()
-
-    async def main():
-        # Fetch supported vs currencies
-        supported_vs_currencies = (
-            await client.api.simple_supported_vs_currencies.fetch()
-        )
-        print(supported_vs_currencies)
-
-    asyncio.run(main())
-
-    import ipdb
-
-    ipdb.set_trace()  # noqa: E402
