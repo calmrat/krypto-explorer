@@ -31,6 +31,7 @@ class TokenBase(BaseModel):
     symbol: str
     name: str
     platforms: dict
+    last_updated: Optional[datetime]
 
 
 class TokenCreate(TokenBase):
