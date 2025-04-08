@@ -33,7 +33,7 @@ __pycache__/
 *.pyd
 
 # Ignore environment files
-.env
+.env*
 .venv/
 venv/
 Pipfile.lock
@@ -100,3 +100,6 @@ build/
 
 # Docker
 docker-compose.override.yml
+
+# Database SQLite
+*.db

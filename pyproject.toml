@@ -10,13 +10,17 @@ requires-python = ">=3.13"
 dependencies = [
     "aiocache>=0.12.3",
     "aiohttp>=3.11.16",
+    "alembic>=1.15.2",
     "asyncio>=3.4.3",
     "click>=8.1.3",
     "duckdb>=1.2.1",
     "fastapi[standard]>=0.115.0",
     "httpx>=0.28.1",
     "ipdb>=0.13.13",
+    "mypy>=1.15.0",
     "pandas>=2.2.3",
+    "pylance>=0.25.2",
+    "pylint>=3.3.6",
     "pytest>=8.3.5",
     "pytest-asyncio>=0.26.0",
     "python-dotenv>=1.1.0",
@@ -27,7 +31,9 @@ dependencies = [
 ]
 
 [project.scripts]
-upgatez = "upgatez.main:main"
+init_db = "qrypt.core.ops.db:init_db"
+drop_db = "qrypt.core.ops.db:drop_db"
+pull_tokens = "qrypt.tokens.services.coingecko.ops.admin:pull_tokens"
 
 [build-system]
 requires = [

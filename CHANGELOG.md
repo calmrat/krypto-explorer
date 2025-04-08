@@ -10,6 +10,8 @@
   + coins/market_data
 - Added CRUD 
 
+---- CI/CD 
+
 ### Fixed
 - None.  
 
@@ -17,4 +19,5 @@
 - None.  
 
 # Todo
-- coingecko api strategy tests
+- Increase test coverage
+- Add Alembic for migrations

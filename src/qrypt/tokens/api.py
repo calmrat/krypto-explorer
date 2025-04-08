@@ -13,14 +13,20 @@ It also includes the necessary authentication and authorization mechanisms.
 
 from datetime import datetime
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
+from qrypt.core.db import get_db
 from qrypt.core.log import logger as log
-from qrypt.tokens.schema import TokenOut
-from qrypt.tokens.services.coingecko.adapter import CoinGeckoAdapter
+from qrypt.tokens.models import BlockchainPlatform, Token
+from qrypt.tokens.services.coingecko.schema import TokenOut
 
+# from qrypt.tokens.services.coingecko.adapter import CoinGeckoAdapter
+
+# Initialize the FastAPI router
 router = APIRouter(prefix="/api/v1/tokens", tags=["tokens"])
 
+# Type aliases
 type EndPointResponseTokenList = list[TokenOut]
 ResponseModel = TokenOut
 
@@ -33,13 +39,12 @@ async def list_tokens() -> EndPointResponseTokenList:
     Returns a list of all tokens in the database.
     """
 
-    client = CoinGeckoAdapter()
+    # client = CoinGeckoAdapter()
     # coins = await client.api.coins_list()
+
     coins = DB
     if not coins:
         return []
-
-    last_updated = None
 
     return [
         TokenOut(
@@ -47,7 +52,7 @@ async def list_tokens() -> EndPointResponseTokenList:
             symbol=coin.symbol,
             name=coin.name,
             platforms=coin.platforms,
-            last_updated=last_updated,
+            last_updated=coin.last_updated,
         )
         for coin in coins
     ]
@@ -89,7 +94,7 @@ async def get_token(token_id: str) -> TokenOut:
 
 
 @router.post("/", response_model=TokenOut, status_code=status.HTTP_201_CREATED)
-async def create_token(data: dict) -> TokenOut:
+async def create_token(data: dict, db: Session = Depends(get_db)) -> TokenOut:
     """
     Create a new token.
 
@@ -109,8 +114,6 @@ async def create_token(data: dict) -> TokenOut:
     log.debug("Token symbol: %s", symbol)
     log.debug("Token platforms: %s", platforms)
 
-    last_updated = datetime.now()
-
     if not (symbol and name and platforms):
         log.error("Token symbol and name are required!")
         raise HTTPException(
@@ -118,21 +121,39 @@ async def create_token(data: dict) -> TokenOut:
             detail="Token symbol and name are required",
         )
 
-    token = TokenOut(
-        id=get_id(),
+    logo_url = ""
+    # price_usd = None
+    # market_cap = None
+
+    token = Token(
+        id=None,
         symbol=symbol,
         name=name,
-        platforms=platforms,
-        last_updated=last_updated,
+        # platforms=platforms,
+        logo_url=logo_url,
+        # price_usd=price_usd,
+        # market_cap=market_cap,
+        last_updated=datetime.now(),
     )
 
-    global DB
-    DB.append(token)
+    # Add the token to the database
+    db.add(token)
+    db.commit()
+    db.refresh(token)
 
-    log.debug("Token created: %s", token)
-    log.debug("Tokens in DB: %s", len(DB))
-    log.debug("Tokens in DB: %s", DB)
-    return token
+    token_reponse = TokenOut(
+        id=int(token.id),
+        symbol=token.symbol,
+        name=token.name,
+        platforms=dict(),
+        last_updated=token.last_updated,
+        logo_url=token.logo_url,
+    )
+
+    log.debug("Token created: %s", token_reponse)
+    # log.debug("Tokens in DB: %s", len(DB))
+    # log.debug("Tokens in DB: %s", DB)
+    return token_reponse
 
 
 @router.put("/{token_id}", response_model=TokenOut)

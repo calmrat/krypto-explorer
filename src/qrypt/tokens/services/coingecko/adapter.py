@@ -24,7 +24,9 @@ Cache
 from abc import ABC
 from dataclasses import dataclass
 
+from qrypt.tokens.services.coingecko.config import CoinGeckoConfig
 from qrypt.tokens.services.coingecko.constants import (
+    BASE_URL_V3,
     DEFAULT_TIMEOUT_SECONDS,
     HEADER_ACCEPT_JSON,
 )
@@ -34,9 +36,6 @@ from qrypt.tokens.services.coingecko.strategies import (
     EndpointSimpleSupportedVsCurrenciesStrategy,
 )
 
-# Base URL for CoinGecko API v3
-API_URL_BASE_v3: str = "https://api.coingecko.com/api/v3"
-
 
 @dataclass(kw_only=True)
 class CoinGeckoAPI(ABC):
@@ -44,8 +43,8 @@ class CoinGeckoAPI(ABC):
     CoinGecko API
     """
 
-    base_url: str = API_URL_BASE_v3
-    timeout: int = DEFAULT_TIMEOUT_SECONDS
+    base_url: str
+    timeout: int
 
 
 @dataclass(kw_only=True)
@@ -65,14 +64,15 @@ class CoinGeckoAdapter:
     api: CoinGeckoAPIv3
     base_url: str
     timeout: int
+    headers: dict
 
-    def __init__(
-        self, base_url: str = API_URL_BASE_v3, timeout: int = DEFAULT_TIMEOUT_SECONDS
-    ):
+    def __init__(self, base_url: str, timeout: int, headers: dict):
         self.base_url = base_url
         self.timeout = timeout
+        self.headers = headers
+        self.config = CoinGeckoConfig()
 
-        if self.base_url == API_URL_BASE_v3:
+        if self.base_url == BASE_URL_V3:
             # Initialize the API with the v3 endpoints
 
             # Create the API object with the v3 endpoints
@@ -83,7 +83,7 @@ class CoinGeckoAdapter:
                     base_url=self.base_url,
                     endpoint="simple/supported_vs_currencies",
                     method="GET",
-                    headers=HEADER_ACCEPT_JSON,
+                    headers=self.headers,
                     timeout=self.timeout,
                 ),
                 # Create the coins market data endpoint
@@ -91,15 +91,16 @@ class CoinGeckoAdapter:
                     base_url=self.base_url,
                     endpoint="coins/markets",
                     method="GET",
-                    headers=HEADER_ACCEPT_JSON,
+                    headers=self.headers,
                     timeout=self.timeout,
+                    params={"vs_currency": self.config.vs_currency},
                 ),
                 # Create the coins list endpoint
                 coins_list=EndpointCoinsListStrategy(
                     base_url=self.base_url,
                     endpoint="coins/list",
                     method="GET",
-                    headers=HEADER_ACCEPT_JSON,
+                    headers=self.headers,
                     timeout=self.timeout,
                     params={"include_platform": "true"},
                 ),

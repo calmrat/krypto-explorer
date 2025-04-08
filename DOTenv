@@ -1,0 +1,11 @@
+# This file is used to store environment variables for the application.
+# This file should not be shared publicly as it may contain sensitive information.
+
+# Database Config
+KE_DATABSE_URL="sqlite:///./crypto.db""
+KE_DATABASE_USERNAME="YOUR_USERNAME_HERE"
+KE_DATABASE_PASSWORD="YOUR_PASSWORD_HERE"
+
+# Services Config
+# Coingecko API Key
+KE_COINGECKO_API_KEY="YOUR_KEY_HERE"
