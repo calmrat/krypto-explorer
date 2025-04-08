@@ -59,7 +59,7 @@ async def test_coingecko_adapter__coins_markets():
     assert "id" in market_data[0]
     assert "symbol" in market_data[0]
 
-    print(market_data[0])
+    log.debug(market_data[0])
 
 
 @pytest.mark.live_api
@@ -86,4 +86,4 @@ async def test_coingecko_adapter__coins_list():
     assert "id" in response[0]
     assert "symbol" in response[0]
 
-    print(response[0])
+    log.debug(response[0])

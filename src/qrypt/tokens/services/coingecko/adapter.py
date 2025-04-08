@@ -21,6 +21,7 @@ Cache
 
 """
 
+from abc import ABC
 from dataclasses import dataclass
 
 from qrypt.tokens.services.coingecko.constants import (
@@ -38,7 +39,7 @@ API_URL_BASE_v3: str = "https://api.coingecko.com/api/v3"
 
 
 @dataclass(kw_only=True)
-class CoinGeckoAPI:
+class CoinGeckoAPI(ABC):
     """
     CoinGecko API
     """
@@ -100,6 +101,7 @@ class CoinGeckoAdapter:
                     method="GET",
                     headers=HEADER_ACCEPT_JSON,
                     timeout=self.timeout,
+                    params={"include_platform": "true"},
                 ),
             )
         else:

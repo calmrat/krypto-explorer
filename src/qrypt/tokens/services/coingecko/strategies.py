@@ -19,10 +19,13 @@ from typing import Optional
 
 import aiohttp
 
+from qrypt.core.log import logger as log
 from qrypt.tokens.services.coingecko.constants import (
     DEFAULT_TIMEOUT_SECONDS,
     HEADER_ACCEPT_JSON,
 )
+
+type EndpointResponse = Optional[list[dict]]
 
 
 @dataclass
@@ -41,6 +44,7 @@ class EndpointStrategyBase(ABC):
 
     @property
     def url(self) -> str:
+        """Generate the full URL for the endpoint"""
         if not self.base_url:
             raise ValueError("Base URL is not set")
         if not self.base_url.startswith("http"):
@@ -56,12 +60,14 @@ class EndpointStrategyBase(ABC):
             self.endpoint = self.endpoint[1:]
         return f"{self.base_url}{self.endpoint}"
 
-    async def __call__(self) -> Optional[dict]:
+    async def __call__(self) -> EndpointResponse:
         """
         Call the fetch method
         :return: The supported vs currencies
         """
-        return await self.fetch()
+        return await self.fetch(
+            params=self.params, data=self.data, timeout=self.timeout
+        )
 
     async def _get(
         self,
@@ -69,7 +75,7 @@ class EndpointStrategyBase(ABC):
         params: dict = dict(),
         data: dict = dict(),
         timeout: int = DEFAULT_TIMEOUT_SECONDS,
-    ) -> Optional[dict]:
+    ) -> EndpointResponse:
         """
         Asynchronous GET request to the endpoint
 
@@ -77,13 +83,13 @@ class EndpointStrategyBase(ABC):
         :param timeout: The timeout for the request
         :return: The response from the endpoint
         """
-        print("Calling GET on endpoint")
+        log.debug("Calling GET on endpoint")
         headers = headers if headers else HEADER_ACCEPT_JSON
-        print(f"URL: {self.url}")
-        print(f"Headers: {headers}")
-        print(f"Params: {params}")
-        print(f"Data: {data}")
-        print(f"Timeout: {timeout}")
+        log.debug("URL: %s", self.url)
+        log.debug("Headers: %s", headers)
+        log.debug("Params: %s", params)
+        log.debug("Data: %s", data)
+        log.debug("Timeout: %s", timeout)
 
         async with aiohttp.ClientSession() as session:
             async with session.get(
@@ -95,7 +101,7 @@ class EndpointStrategyBase(ABC):
                 if response.status == 200:
                     return await response.json()
                 else:
-                    print(f"Error: {response.status} - {response.reason}")
+                    log.debug("Error: %s - %s", response.status, response.reason)
                     response.raise_for_status()
         return None
 
@@ -105,7 +111,7 @@ class EndpointStrategyBase(ABC):
         params: dict = dict(),
         data: dict = dict(),
         timeout: int = DEFAULT_TIMEOUT_SECONDS,
-    ) -> Optional[dict]:
+    ) -> EndpointResponse:
         """
         Fetch the endpoint data. This method should be implemented by subclasses.
         :param params: The parameters to send with the request (optional)
@@ -135,12 +141,12 @@ class EndpointSimpleSupportedVsCurrenciesStrategy(EndpointStrategyBase):
         params: dict = dict(),
         data: dict = dict(),
         timeout: int = DEFAULT_TIMEOUT_SECONDS,
-    ) -> Optional[dict]:
+    ) -> EndpointResponse:
         """
         Fetch the supported vs currencies from CoinGecko
         :return: The supported vs currencies
         """
-        print("Fetching supported vs currencies from CoinGecko")
+        log.debug("Fetching supported vs currencies from CoinGecko")
         return await self._get(params=params, data=data, timeout=timeout)
 
 
@@ -155,12 +161,12 @@ class EndpointCoinsMarketDataStrategy(EndpointStrategyBase):
         params: dict = dict(),
         data: dict = dict(),
         timeout: int = DEFAULT_TIMEOUT_SECONDS,
-    ) -> Optional[dict]:
+    ) -> EndpointResponse:
         """
         Fetch the supported vs currencies from CoinGecko
         :return: The supported vs currencies
         """
-        print("Fetching Coin Market Data from CoinGecko")
+        log.debug("Fetching Coin Market Data from CoinGecko")
         return await self._get(params=params, data=data, timeout=timeout)
 
 
@@ -175,12 +181,12 @@ class EndpointCoinsListStrategy(EndpointStrategyBase):
         params: dict = dict(),
         data: dict = dict(),
         timeout: int = DEFAULT_TIMEOUT_SECONDS,
-    ) -> Optional[dict]:
+    ) -> EndpointResponse:
         """
         Fetch the list of coins from CoinGecko
         :return: The list of coins (with meta data)
         """
-        print("Fetching Coin List from CoinGecko")
+        log.debug("Fetching Coin List from CoinGecko")
         return await self._get(params=params, data=data, timeout=timeout)
 
 

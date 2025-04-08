@@ -32,14 +32,13 @@ async def list_tokens() -> list[TokenOut]:
     client = CoinGeckoAdapter()
     coins = await client.api.coins_list()
 
-    # coins = [TokenOut(**coin) for coin in coins]
-    coin = coins[0] if coins else dict()
     return [
         TokenOut(
-            id="id",
-            symbol="symbol",
-            name="name",
-            platforms={"ethereum": "asdfasdfasd"},
+            id=coin.get("id"),
+            symbol=coin.get("symbol", ""),
+            name=coin.get("name", ""),
+            platforms=coin.get("platforms", {}),
             last_updated=datetime.now(),
         )
+        for coin in coins
     ]
