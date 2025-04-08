@@ -5,7 +5,10 @@
 ### Added
 - Enabled uv environments
 - Added project stubs.  
-- coingecko api adapter with initially required endpoint support added
+- Added coingecko api adapter: 
+  + simple/supported_vs_currencies
+  + coins/market_data
+- Added CRUD 
 
 ### Fixed
 - None.  
@@ -13,5 +16,5 @@
 ### Known Issues  
 - None.  
 
-# Future
-- ...
+# Todo
+- coingecko api strategy tests

@@ -65,7 +65,7 @@ class EndpointStrategyBase(ABC):
 
     async def _get(
         self,
-        headers: dict = HEADER_ACCEPT_JSON,
+        headers: dict = dict(),
         params: dict = dict(),
         data: dict = dict(),
         timeout: int = DEFAULT_TIMEOUT_SECONDS,
@@ -78,6 +78,7 @@ class EndpointStrategyBase(ABC):
         :return: The response from the endpoint
         """
         print("Calling GET on endpoint")
+        headers = headers if headers else HEADER_ACCEPT_JSON
         print(f"URL: {self.url}")
         print(f"Headers: {headers}")
         print(f"Params: {params}")
