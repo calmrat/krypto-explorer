@@ -50,6 +50,10 @@ jobs:
           uv venv .venv
           source .venv/bin/activate
           echo 'export PATH=".venv/bin:$PATH"' >> $GITHUB_ENV
+          echo $PATH
+          pwd
+          which python
+          which pytest
           uv sync
           uv pip install -r pyproject.toml
           uv pip install -e .
