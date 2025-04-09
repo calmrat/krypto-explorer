@@ -52,6 +52,7 @@ jobs:
           echo 'export PATH=".venv/bin:$PATH"' >> $GITHUB_ENV
           echo $PATH
           pwd
+          ls
           ls /home/runner/work/krypto-explorer/krypto-explorer/.venv/bin
           uv sync
           uv pip install -r pyproject.toml
@@ -65,6 +66,17 @@ jobs:
 
       - name: 🧪 Run tests
         run: |
+          source .venv/bin/activate
+          echo 'export PATH=".venv/bin:$PATH"' >> $GITHUB_ENV
+
+          echo $PATH
+          pwd
+          ls
+          ls /home/runner/work/krypto-explorer/krypto-explorer/.venv/bin
+
+          ls /home/runner/work/krypto-explorer/krypto-explorer/.venv/bin
+          which pytest
+
           pytest -v --maxfail=1
 
       # Optional coverage
