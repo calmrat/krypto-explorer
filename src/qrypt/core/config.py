@@ -87,8 +87,8 @@ class DBConfigPostgreSQL(DBConfigBase):
     database_name: str = ""
 
     def __init__(self, validate: bool = True) -> None:
-        self.database_pw = os.environ.get("KE_DATABASE_PW", "")
-        self.database_user = os.environ.get("KE_DATABASE_USER", "")
+        self.database_pw = os.environ.get("KE_DATABASE_PASSWORD", "")
+        self.database_user = os.environ.get("KE_DATABASE_USERNAME", "")
         self.database_host = os.environ.get("KE_DATABASE_HOST", "")
         self.database_port = os.environ.get("KE_DATABASE_PORT", "")
         self.database_name = os.environ.get("KE_DATABASE_NAME", "")
@@ -154,6 +154,8 @@ class AppConfig:
 
     def __init__(self) -> None:
         """Initialize the application configuration"""
+        print (f"ENV: {os.environ.get("KE_DATABASE_URL")}")
+        print (os.environ)
         if os.environ.get("KE_DATABASE_URL", "").startswith("postgresql"):
             self.db = DBConfigPostgreSQL()
         else:

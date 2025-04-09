@@ -1,18 +1,59 @@
 # Author: Chris Ward <chris@calmrat.com.>
-# Description: Docker Compose file for Qrypto
-# License: MIT
-
-version: "3.13"
-
 services:
-  qrypto:
+  web:
     build: .
-    container_name: qrypto
+    container_name: qrypto-web
     ports:
-      - "5000:5000"
-    env_file:
-      - .env
+      - "8000:8000"   # FastAPI
+      - "8501:8501"   # Streamlit
     volumes:
-      - ./qrypto/data/cache:/app/qrypto/data/cache
-      - ./logs:/app/logs
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - LOGO_UPLOAD_DIR=/app/staticserve/logos
+      - BASE_URL=http://0.0.0.0:8000
+      
+      - KE_DATABASE_USERNAME=postgres
+      - KE_DATABASE_PASSWORD=postgres
+      - KE_DATABASE_NAME=qrypto
+      - KE_DATABASE_HOST=0.0.0.0
+      - KE_DATABASE_PORT=5432
+#      - KE_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/qrypto
+      - KE_DATABASE_URL=sqlite:///./qrypto.db
+      
+      - KE_COINGECKO_API_DEMO_USER=true
+      - KE_COINGECKO_API_URL=https://api.coingecko.com/api/v3
+      - KE_COINGECKO_API_KEY=CG-ttYMZ422TYbJs92LF3iaFhMP
+      - KE_COINGECKO_API_TIMEOUT=10
+      - KE_COINGECKO_API_VS_CURRENCY=usd
+      
+      - KE_API_STATIC_DIR=./staticserve
+
+      
+
+    command: ["./start.sh"]
+
+  db:
+    image: postgres:15
+    container_name: qrypto-db
     restart: always
+    environment:
+      POSTGRES_DB: qrypto
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: qrypto-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
