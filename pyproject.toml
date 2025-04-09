@@ -25,7 +25,7 @@ dependencies = [
     "pytest-asyncio>=0.26.0",
     "python-dotenv>=1.1.0",
     "redis>=5.2.1",
-    "sqlalchemy>=2.0.40",
+    "sqlalchemy[mypy]>=2.0.40",
     "streamlit>=1.44.1",
     "uvicorn>=0.18.3",
 ]

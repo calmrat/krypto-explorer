@@ -27,13 +27,13 @@ from qrypt.core.log import logger as log
 from qrypt.tokens.services.coingecko.constants import (
     DEFAULT_TIMEOUT_SECONDS,
     HEADER_ACCEPT_JSON,
-    TTL_30_SECONDS,
+    TTL_60_MINUTES,
 )
 
 type EndpointResponse = Optional[list[dict]]
 
 
-def cached_token(key: str, jsonfile: Path, ttl: int = TTL_30_SECONDS):
+def cached_token(key: str, jsonfile: Path, ttl: int = TTL_60_MINUTES):
     """
     Decorator to cache the token in a JSON file.
     :param jsonfile: The JSON file to cache the token in
@@ -190,7 +190,6 @@ class EndpointSimpleSupportedVsCurrenciesStrategy(EndpointStrategyBase):
     Endpoint call to get the supported vs currencies from CoinGecko
     """
 
-    # FIXME: Pull from Config
     @cached_token(
         "simple_supported_vs_currencies", Path("localcache/service_coingecko.json")
     )

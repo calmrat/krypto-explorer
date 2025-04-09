@@ -11,10 +11,11 @@ It includes the SQLAlchemy model for the database and the Pydantic schema for da
 
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from qrypt.core.db import Base  # ← You need this to register the model
+from qrypt.core.db import Base, get_db
+from qrypt.core.log import logger as log
 
 
 def get_current_time() -> datetime:
@@ -22,42 +23,51 @@ def get_current_time() -> datetime:
     return datetime.now(timezone.utc)
 
 
-class BlockchainPlatform(Base):
-    """BlockchainPlatforms model for SQLAlchemy"""
-
-    __tablename__ = "blockchain_platforms"
-
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    platform_name = Column(String, nullable=False)
-    platform_address = Column(String, nullable=False)
-    token_id = Column(Integer, ForeignKey("tokens.id"), nullable=False)
-    token = relationship("Token", back_populates="platforms")
-
-    # Back reference to Token
-    token = relationship("Token", back_populates="platforms")
-
-    last_updated = Column(
-        DateTime,
-        default=get_current_time,
-        onupdate=get_current_time,
-    )
-
-
 class Token(Base):
-    """Token model for SQLAlchemy"""
+    """Token model for the Qrypto application."""
 
     __tablename__ = "tokens"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    symbol = Column(String, index=True, unique=True, nullable=False)
-    name = Column(String, unique=True, nullable=False)
-    logo_url = Column(String, nullable=True)
-    last_updated = Column(
-        DateTime,
-        default=get_current_time,
-        onupdate=get_current_time,
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    ext_id: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
+    symbol: Mapped[str] = mapped_column(
+        String, unique=False, index=True, nullable=False
     )
-    # Establish relationship with BlockchainPlatforms
-    platforms = relationship(
-        "BlockchainPlatforms", back_populates="token", lazy="dynamic"
+    name: Mapped[str] = mapped_column(String, unique=False, nullable=False)
+    logo_url: Mapped[str] = mapped_column(String, nullable=True)
+    last_updated: Mapped[datetime] = mapped_column(
+        DateTime, default=get_current_time, onupdate=get_current_time
     )
+
+    platforms: Mapped[list["BlockchainPlatform"]] = relationship(
+        back_populates="token", cascade="all, delete-orphan"
+    )
+
+
+class BlockchainPlatform(Base):
+    """BlockchainPlatform model for the Qrypto application."""
+
+    __tablename__ = "blockchain_platforms"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    address: Mapped[str] = mapped_column(String, nullable=False)
+    token_id: Mapped[int] = mapped_column(ForeignKey("tokens.id"), nullable=False)
+    last_updated: Mapped[datetime] = mapped_column(
+        DateTime, default=get_current_time, onupdate=get_current_time
+    )
+
+    # Relationship back to token
+    token: Mapped["Token"] = relationship(back_populates="platforms")
+
+
+# FIXME: add type for the input model type
+def get_all(model) -> list[Token | BlockchainPlatform]:
+    """Get all tokens from the database."""
+    log.debug("Fetching all tokens from the database")
+    db = next(get_db())
+    try:
+        tokens = db.query(model).all()
+        return tokens
+    finally:
+        db.close()

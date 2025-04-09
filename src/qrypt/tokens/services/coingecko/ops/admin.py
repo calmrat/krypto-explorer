@@ -8,11 +8,13 @@ This module contains the operations for pulling tokens from the CoinGecko API.
 
 import asyncio
 
+from sqlalchemy.exc import IntegrityError
+
 # from sqlalchemy import insert, select, update
 # from sqlalchemy.orm import Session
-from qrypt.core.db import SessionLocal
+from qrypt.core.db import SessionLocal, get_db
 from qrypt.core.log import logger as log
-from qrypt.tokens.models import BlockchainPlatform, Token
+from qrypt.tokens.models import BlockchainPlatform, Token, get_all
 from qrypt.tokens.services.coingecko.adapter import CoinGeckoAdapter
 from qrypt.tokens.services.coingecko.config import CoinGeckoConfig
 from qrypt.tokens.services.coingecko.schema import TokenOut
@@ -60,26 +62,51 @@ def pull_tokens() -> None:
         raise ValueError("No coins found in the response")
 
     log.debug("Found %d coins", len(_tokens))
-    import ipdb
 
-    ipdb.set_trace()
+    # Get a session
+    db = next(get_db())
 
-    tokens = []
+    # Prepare tokens for insertion
+    skipped = []
     for token in _tokens:
+        # all_tokens = get_all(Token)
+        # log.debug("All tokens: %s", len(all_tokens))
+        # log.debug("Token: %s", token["symbol"])
+        # log.debug("platforms: %s", token.get("platforms", {}))
+
         _platforms = token.get("platforms", {})
-        platforms = [
-            BlockchainPlatform(name=platform, symbol=symbol)
-            for platform, symbol in _platforms.items()
+
+        _platforms = [
+            BlockchainPlatform(name=platform, address=address)
+            for platform, address in _platforms.items()
         ]
-        tokens.append(
-            Token(
-                id=int(token["id"]),
-                symbol=str(token["symbol"]),
-                name=str(token["name"]),
-                platforms=platforms,
-            )
+
+        _token = Token(
+            ext_id=str(token["id"]),
+            symbol=str(token["symbol"]),
+            name=str(token["name"]),
+            platforms=_platforms,
+            logo_url=token.get("image", "/static/images/coin-logo.png"),
         )
+        # Let's track all the tokens, even if they are not added to the database
 
-    import ipdb
+        db.add(_token)
+        try:
+            db.commit()
+        except IntegrityError:
+            log.debug(
+                "⚠️ Token already exists, skipping: [%s] %s",
+                _token.ext_id,
+                _token.symbol,
+            )
+            db.rollback()
+            # raise e
+            skipped.append(_token)
+            continue
+        db.refresh(_token)
 
-    ipdb.set_trace()
+    # close the session
+    db.close()
+
+    log.debug("Inserted %d tokens", len(_tokens))
+    log.debug("Skipped %d tokens", len(skipped))

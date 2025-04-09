@@ -8,7 +8,7 @@ This module contains the database setup and configuration for the Qrypto applica
 """
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from qrypt.core.config import AppConfig, DBConfigSQLite
 from qrypt.core.log import logger as log
@@ -31,12 +31,16 @@ else:
 log.debug("Setting up SQLAlchemy Session + Base.")
 # Session + Base
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+
+
+class Base(DeclarativeBase):
+    """Base class for all models in the application."""
 
 
 # Dependency
 def get_db():
     """Get a database session"""
+    log.debug("Getting database session")
     db = SessionLocal()
     try:
         yield db

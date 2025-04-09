@@ -17,6 +17,7 @@ TARGET_TABLES: set = {"tokens", "users"}
 
 
 def check_tables(tables: set = TARGET_TABLES) -> Optional[set]:
+    """Check if the required tables exist in the database"""
     inspector = inspect(engine)
     db_tables = set(inspector.get_table_names())
     if not tables.issubset(db_tables):
