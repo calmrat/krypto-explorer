@@ -45,4 +45,5 @@ def get_db():
     try:
         yield db
     finally:
+        log.debug("Closing database session")
         db.close()

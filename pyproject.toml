@@ -23,6 +23,12 @@ dependencies = [
     "sqlalchemy[mypy]>=2.0.40",
     "streamlit>=1.44.1",
     "uvicorn>=0.18.3",
+    "mypy>=1.5.0",
+    "ruff>=0.0.263",
+    "black>=23.9.1",
+    "ipdb>=0.13.13",
+    "pylance>=0.25.2",
+    "pylint>=3.3.6",
 ]
 
 [project.scripts]
