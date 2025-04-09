@@ -7,6 +7,7 @@ This module contains the operations for pulling tokens from the CoinGecko API.
 """
 
 import asyncio
+from typing import Optional, Tuple
 
 from sqlalchemy.exc import IntegrityError
 
@@ -46,7 +47,7 @@ async def create_token(symbol: str, name: str, logo_url: str) -> None:
         db.close()  # always close session
 
 
-def pull_tokens() -> None:
+def pull_tokens() -> Tuple[list, list]:
     """Pull tokens from CoinGecko API and insert them into the database."""
 
     log.debug("Pulling tokens from CoinGecko API")
@@ -59,7 +60,8 @@ def pull_tokens() -> None:
     _tokens = asyncio.run(client.api.coins_list())
 
     if not _tokens:
-        raise ValueError("No coins found in the response")
+        log.warning("No tokens found in the response")
+        return [], []
 
     log.debug("Found %d coins", len(_tokens))
 
@@ -67,6 +69,7 @@ def pull_tokens() -> None:
     db = next(get_db())
 
     # Prepare tokens for insertion
+    added = []
     skipped = []
     for token in _tokens:
         # all_tokens = get_all(Token)
@@ -93,6 +96,7 @@ def pull_tokens() -> None:
         db.add(_token)
         try:
             db.commit()
+            added.append(_token)
         except IntegrityError:
             log.debug(
                 "⚠️ Token already exists, skipping: [%s] %s",
@@ -100,7 +104,6 @@ def pull_tokens() -> None:
                 _token.symbol,
             )
             db.rollback()
-            # raise e
             skipped.append(_token)
             continue
         db.refresh(_token)
@@ -108,5 +111,7 @@ def pull_tokens() -> None:
     # close the session
     db.close()
 
-    log.debug("Inserted %d tokens", len(_tokens))
+    log.debug("Inserted %d tokens", len(added))
     log.debug("Skipped %d tokens", len(skipped))
+
+    return (added, skipped)

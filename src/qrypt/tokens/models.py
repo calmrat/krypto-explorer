@@ -29,7 +29,9 @@ class Token(Base):
     __tablename__ = "tokens"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    ext_id: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
+    ext_id: Mapped[str] = mapped_column(
+        String, unique=True, index=True, nullable=True
+    )  # RENAME to gc_id (coingecko id)
     symbol: Mapped[str] = mapped_column(
         String, unique=False, index=True, nullable=False
     )

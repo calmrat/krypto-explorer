@@ -19,6 +19,7 @@ dependencies = [
     "ipdb>=0.13.13",
     "mypy>=1.15.0",
     "pandas>=2.2.3",
+    "pillow>=11.1.0",
     "pylance>=0.25.2",
     "pylint>=3.3.6",
     "pytest>=8.3.5",
