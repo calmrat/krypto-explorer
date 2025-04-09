@@ -13,10 +13,10 @@ jobs:
     services:
       postgres:
         image: postgres:15
-#        env:
-#          POSTGRES_DB: qrypto
-#          POSTGRES_USER: postgres
-#          POSTGRES_PASSWORD: 
+        env:
+          POSTGRES_DB: qrypto
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 
         ports:
           - 5432:5432
         options: >-
