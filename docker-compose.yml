@@ -17,16 +17,16 @@ services:
       - BASE_URL=http://0.0.0.0:8000
       
       - KE_DATABASE_USERNAME=postgres
-      - KE_DATABASE_PASSWORD=postgres
+      - KE_DATABASE_PASSWORD=
       - KE_DATABASE_NAME=qrypto
       - KE_DATABASE_HOST=0.0.0.0
       - KE_DATABASE_PORT=5432
 #      - KE_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/qrypto
-      - KE_DATABASE_URL=sqlite:///./qrypto.db
+      - KE_DATABASE_URL=sqlite:///./qrypt.db
       
       - KE_COINGECKO_API_DEMO_USER=true
       - KE_COINGECKO_API_URL=https://api.coingecko.com/api/v3
-      - KE_COINGECKO_API_KEY=CG-ttYMZ422TYbJs92LF3iaFhMP
+      - KE_COINGECKO_API_KEY=
       - KE_COINGECKO_API_TIMEOUT=10
       - KE_COINGECKO_API_VS_CURRENCY=usd
       
