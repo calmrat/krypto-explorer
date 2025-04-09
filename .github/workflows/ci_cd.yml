@@ -52,12 +52,13 @@ jobs:
           echo 'export PATH=".venv/bin:$PATH"' >> $GITHUB_ENV
           echo $PATH
           pwd
-          which python
-          which pytest
+          ls /home/runner/work/krypto-explorer/krypto-explorer/.venv/bin
           uv sync
           uv pip install -r pyproject.toml
           uv pip install -e .
-
+          which python
+          which pytest
+          
       - name: 🔧 Wait for Postgres
         run: |
           until pg_isready -h localhost -U postgres; do sleep 1; done
