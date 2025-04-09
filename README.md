@@ -26,10 +26,36 @@ A containerized web application for managing cryptocurrency records using FastAP
 
 ## 📦 Setup (Production with Docker)
 
-1. **Clone the repository**
+1. **Clone the repository and Update .env**
    ```bash
    git clone https://github.com/calmrat/krypto-explorer
    cd krypto-explorer
+   
+   mv DOTenv .env
+   # Update
+   # CoinGecko Setup
+   
+   # # Coingecko API Key
+   # Option A) Demo user with API key (recommended)
+   KE_COINGECKO_API_DEMO_USER=true
+   KE_COINGECKO_API_KEY=**YOUR_KEY_HERE**
+
+   # Option B)
+   # No API key (works, but very limited)
+   KE_COINGECKO_API_DEMO_USER=false
+   KE_COINGECKO_API_KEY=
+
+   # Database 
+   # Option A) # Default - SQLite
+   KE_DATABSE_URL=sqlite:///./crypt.db
+
+   # Option B) Postgresql
+   KE_DATABASE_USERNAME=**USERNAME**
+   KE_DATABASE_PASSWORD=**PASSWORD**
+   KE_DATABASE_NAME=qrypto
+   KE_DATABASE_HOST=0.0.0.0
+   KE_DATABASE_PORT=5432
+
    ```
 
 2. **Build and start the Docker containers**

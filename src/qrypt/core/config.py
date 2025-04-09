@@ -124,8 +124,12 @@ class APIConfigBase(ABC):
 
     def __init__(self, validate: bool = True) -> None:
         self.static_dir = (
-            Path(os.environ.get("KE_API_STATIC_DIR", "")).expanduser().absolute()
+            Path(os.environ.get("KE_API_STATIC_DIR", "./staticserve"))
+            .expanduser()
+            .absolute()
         )
+        if not self.static_dir.exists():
+            self.static_dir.mkdir(parents=True, exist_ok=True)
 
         if validate:
             self.validate()
@@ -154,8 +158,6 @@ class AppConfig:
 
     def __init__(self) -> None:
         """Initialize the application configuration"""
-        print (f"ENV: {os.environ.get("KE_DATABASE_URL")}")
-        print (os.environ)
         if os.environ.get("KE_DATABASE_URL", "").startswith("postgresql"):
             self.db = DBConfigPostgreSQL()
         else:

@@ -32,6 +32,9 @@ from qrypt.tokens.services.coingecko.constants import (
 
 type EndpointResponse = Optional[list[dict]]
 
+if not Path("./localcache/").exists():
+    os.makedirs(Path("./localcache/"), exist_ok=True)
+
 
 def cached_token(key: str, jsonfile: Path, ttl: int = TTL_60_MINUTES):
     """
@@ -191,7 +194,7 @@ class EndpointSimpleSupportedVsCurrenciesStrategy(EndpointStrategyBase):
     """
 
     @cached_token(
-        "simple_supported_vs_currencies", Path("localcache/service_coingecko.json")
+        "simple_supported_vs_currencies", Path("./localcache/service_coingecko.json")
     )
     async def fetch(
         self,
@@ -218,7 +221,7 @@ class EndpointCoinsMarketDataStrategy(EndpointStrategyBase):
     :param params: The parameters to send with the request (required: vs_currency)
     """
 
-    @cached_token("coins_marketa_data", Path("localcache/service_coingecko.json"))
+    @cached_token("coins_marketa_data", Path("./localcache/service_coingecko.json"))
     async def fetch(
         self,
         params: dict = dict(),
@@ -242,7 +245,7 @@ class EndpointCoinsListStrategy(EndpointStrategyBase):
     Endpoint to get the list of coins from CoinGecko
     """
 
-    @cached_token("coins_list", Path("localcache/service_coingecko.json"))
+    @cached_token("coins_list", Path("./localcache/service_coingecko.json"))
     async def fetch(
         self,
         params: dict = dict(),

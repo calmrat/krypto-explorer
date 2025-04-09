@@ -1,20 +1,14 @@
 #!/bin/bash
 # Activate virtual environment
 
-which uvicorn
-which streamlit
-
-pwd
-ls -la
-
+echo Installing dependencies
 uv pip install --system -e .
-
-#uv pip list
-#printenv
 
 echo Initializing database
 uv run init_db
 echo DONE
+
+printenv
 
 echo Pulling tokens
 uv run pull_tokens

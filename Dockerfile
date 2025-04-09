@@ -27,8 +27,7 @@ COPY requirements.txt .
 COPY pyproject.toml .
 COPY .python-version .
 COPY start.sh .
-# Copy .env file
-# COPY .env .
+COPY .env .
 COPY staticserve .
 COPY localcache .
 

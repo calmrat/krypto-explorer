@@ -5,7 +5,6 @@ Qrypto - CoinGecko Service - Configuration
 """
 
 import os
-from ast import Not
 
 from qrypt.core.config import ConfigBase
 from qrypt.tokens.services.coingecko.constants import (

@@ -11,28 +11,9 @@ services:
     depends_on:
       - db
       - redis
-    environment:
-      - REDIS_URL=redis://redis:6379
-      - LOGO_UPLOAD_DIR=/app/staticserve/logos
-      - BASE_URL=http://0.0.0.0:8000
-      
-      - KE_DATABASE_USERNAME=postgres
-      - KE_DATABASE_PASSWORD=
-      - KE_DATABASE_NAME=qrypto
-      - KE_DATABASE_HOST=0.0.0.0
-      - KE_DATABASE_PORT=5432
-#      - KE_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/qrypto
-      - KE_DATABASE_URL=sqlite:///./qrypt.db
-      
-      - KE_COINGECKO_API_DEMO_USER=true
-      - KE_COINGECKO_API_URL=https://api.coingecko.com/api/v3
-      - KE_COINGECKO_API_KEY=
-      - KE_COINGECKO_API_TIMEOUT=10
-      - KE_COINGECKO_API_VS_CURRENCY=usd
-      
-      - KE_API_STATIC_DIR=./staticserve
-
-      
+    #environment:
+    # see DOTenv -> .env file in project root
+    # see README.md for more details.
 
     command: ["./start.sh"]
 
