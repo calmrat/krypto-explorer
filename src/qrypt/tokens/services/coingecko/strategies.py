@@ -46,7 +46,7 @@ def cached_token(key: str, jsonfile: Path, ttl: int = TTL_60_MINUTES):
     def load(key):
         with open(jsonfile, mode="r", encoding="utf8") as f:
             cache = json.load(f)
-            _data = cache.get(key, [])
+            _data = cache.get(key, {})
             data, ctime = _data.get("data"), _data.get("ctime")
             if not data:
                 raise ValueError(f"Cache for {key} not found in {jsonfile}")

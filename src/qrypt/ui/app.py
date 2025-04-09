@@ -7,6 +7,8 @@ Qrypto - Token API - Streamlit App UI
 """
 
 import os
+from pathlib import Path
+from time import sleep
 from urllib.parse import urljoin
 from uuid import uuid4
 
@@ -21,13 +23,24 @@ from qrypt.tokens.services.coingecko.ops.admin import pull_tokens
 st.set_page_config(page_title="🪙 Qrypt Coin Explorer", layout="centered")
 
 BASE_URL = "http://127.0.0.1:8000"
-LOGO_UPLOAD_DIR = "/Users/cward/Repos/krypto-explorer/staticserve/logos"  # ensure this folder exists and is served
+STATIC_DIR = "./staticserve"
+LOGO_UPLOAD_DIR = f"{STATIC_DIR}/logos"  # ensure this folder exists and is served
 LOGO_STATIC_DIR = "/static/logos"
+
+
+if not Path(STATIC_DIR).exists():
+    os.makedirs(STATIC_DIR, exist_ok=True)
+    st.warning(f"ℹ️ STATIC_DIR '{STATIC_DIR}' created.")
+
+
+def delayed_rerun(delay: float = 0.3) -> None:
+    sleep(delay)  # Just delay the rerun so you can see the success
+    st.rerun()
 
 
 def list_tokens(db: Session):
     """List all tokens in the database."""
-    return db.query(Token).all()
+    return db.query(Token).order_by(Token.symbol.desc()).all()
 
 
 def add_token(db: Session, symbol, name, logo_url):
@@ -107,7 +120,7 @@ if tab_selector == "📋 View All":
         st.info("No tokens found in the database. Attempting to sync...")
         sync_tokens()
         st.success("Tokens pulled successfully.")
-        st.rerun()
+        delayed_rerun()
 
     total_tokens = len(tokens)
 
@@ -149,7 +162,7 @@ if tab_selector == "📋 View All":
     st.divider()
 
     for t in paginated_tokens:
-        col1, col2, col3, col4 = st.columns([3, 1, 1, 1])  # token info, update, delete
+        col1, col2, col3, col4 = st.columns([2, 1, 1, 1])  # token info, update, delete
 
         with col1:
             st.markdown(f"**{t.symbol}** – {t.name}")
@@ -160,19 +173,19 @@ if tab_selector == "📋 View All":
             if st.button("📝 Update", key=f"view_update_{t.id}"):
                 st.session_state["update_selected_token"] = t.id
                 st.session_state["active_tab"] = "✏️ Update/Delete"
-                st.rerun()
+                delayed_rerun()
 
         with col3:
             if st.button("🗑️ Delete", key=f"view_delete_{t.id}", type="primary"):
                 session.delete(t)
                 session.commit()
                 st.success(f"Deleted {t.symbol}")
-                st.rerun()
+                delayed_rerun()
 
         with col4:
             if st.button(f"🔍 Detail", key=f"view_btn_{t.id}"):
                 st.session_state["detail_token_id"] = t.id
-                st.rerun()
+                delayed_rerun()
         st.divider()
 
 elif tab_selector == "➕ Add Token":
@@ -223,7 +236,7 @@ elif tab_selector == "➕ Add Token":
                 session.rollback()
             else:
                 st.success(f"Token '{symbol}' added!")
-                st.rerun()
+                delayed_rerun()
 
     token = get_token(session, st.session_state.get("detail_token_id"))
     if token:
@@ -303,7 +316,7 @@ elif tab_selector == "✏️ Update/Delete":
             token.name = new_name
             session.commit()
             st.success("Success")
-            st.rerun()
+            delayed_rerun()
 
         if st.button(
             "Delete",
@@ -316,7 +329,7 @@ elif tab_selector == "✏️ Update/Delete":
             session.delete(token)
             session.commit()
             st.warning("Token deleted.")
-            st.rerun()
+            delayed_rerun()
 
     else:
         st.info("No tokens found.")
@@ -334,12 +347,17 @@ elif tab_selector == "🔍 Search":
 
     if query:
         like_pattern = f"%{query}%"
-        results = session.query(Token).filter(Token.name.ilike(like_pattern)).all()
+        results = (
+            session.query(Token)
+            .filter(Token.name.ilike(like_pattern))
+            .order_by(Token.name.desc())
+            .all()
+        )
 
         st.write(f"Found {len(results)} result(s):")
 
         for t in results:
-            col1, col2, col3 = st.columns([4, 1, 1])  # info, update, delete
+            col1, col2, col3 = st.columns([3, 1, 1])  # info, update, delete
 
             with col1:
                 st.markdown(f"**{t.symbol}** – {t.name}")
@@ -350,14 +368,14 @@ elif tab_selector == "🔍 Search":
                 if st.button("📝 Update", key=f"update_{t.id}"):
                     st.session_state["update_selected_token"] = t.id
                     st.session_state["active_tab"] = "✏️ Update/Delete"
-                    st.rerun()  # redirect to Update tab
+                    delayed_rerun()  # redirect to Update tab
 
             with col3:
                 if st.button("🗑️ Delete", key=f"delete_{t.id}", type="primary"):
                     session.delete(t)
                     session.commit()
                     st.success(f"Deleted token: {t.symbol}")
-                    st.rerun()
+                    delayed_rerun()
 
             st.divider()
     else:
@@ -377,7 +395,7 @@ elif tab_selector == "🛠️ Admin Panel":
     if st.button("🔄 Pull Tokens from CoinGecko", use_container_width=True):
         sync_tokens()
         st.success("Tokens pulled successfully.")
-        st.rerun()
+        delayed_rerun(15)
 
     st.divider()
 
@@ -398,8 +416,7 @@ elif tab_selector == "🛠️ Admin Panel":
         session.query(Token).delete()
         session.commit()
         st.success("All tokens deleted.")
-        st.rerun()
-
+        delayed_rerun()
     st.divider()
 
     st.markdown("### Other Admin Actions")

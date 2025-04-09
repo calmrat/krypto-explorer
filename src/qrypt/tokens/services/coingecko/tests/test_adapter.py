@@ -12,15 +12,31 @@ import pytest
 from qrypt.tokens.services.coingecko.adapter import CoinGeckoAdapter
 
 
+@pytest.fixture
+def client():
+    """
+    Fixture to create a CoinGeckoAdapter instance.
+    """
+    return CoinGeckoAdapter(
+        base_url="https://api.coingecko.com/api/v3",
+        timeout=30,
+        headers={"Content-Type": "application/json"},
+    )
+
+
 @pytest.mark.live_api
-async def test_coingecko_adapter__simple_supported_vs_currencies():
+async def test_coingecko_adapter__simple_supported_vs_currencies(client):
     """
     Test the CoinGeckoAdapter class.
     """
     # Create an instance of the CoinGeckoAdapter
     # with the default endpoint strategy
 
-    client = CoinGeckoAdapter()
+    # client = CoinGeckoAdapter(
+    #    base_url="https://api.coingecko.com/api/v3",
+    #    timeout=30,
+    #    headers={"Content-Type": "application/json"},
+    # )
 
     # Fetch supported vs currencies
     supported_vs_currencies = await client.api.simple_supported_vs_currencies.fetch()
@@ -35,14 +51,14 @@ async def test_coingecko_adapter__simple_supported_vs_currencies():
 
 
 @pytest.mark.live_api
-async def test_coingecko_adapter__coins_markets():
+async def test_coingecko_adapter__coins_markets(client):
     """
     Test the CoinGeckoAdapter class.
     """
     # Create an instance of the CoinGeckoAdapter
     # with the default endpoint strategy
 
-    client = CoinGeckoAdapter()
+    # client = CoinGeckoAdapter()
 
     # Fetch market data for a specific coin
     params = {"vs_currency": "usd", "ids": "bitcoin"}
@@ -59,18 +75,16 @@ async def test_coingecko_adapter__coins_markets():
     assert "id" in market_data[0]
     assert "symbol" in market_data[0]
 
-    log.debug(market_data[0])
-
 
 @pytest.mark.live_api
-async def test_coingecko_adapter__coins_list():
+async def test_coingecko_adapter__coins_list(client):
     """
     Test the CoinGeckoAdapter class.
     """
     # Create an instance of the CoinGeckoAdapter
     # with the default endpoint strategy
 
-    client = CoinGeckoAdapter()
+    # client = CoinGeckoAdapter()
 
     # Fetch market data for a specific coin
     response = await client.api.coins_list.fetch()
@@ -85,5 +99,3 @@ async def test_coingecko_adapter__coins_list():
     # Check if the response contains expected keys
     assert "id" in response[0]
     assert "symbol" in response[0]
-
-    log.debug(response[0])

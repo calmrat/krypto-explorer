@@ -31,7 +31,7 @@ A containerized web application for managing cryptocurrency records using FastAP
    git clone https://github.com/calmrat/krypto-explorer
    cd krypto-explorer
    
-   mv DOTenv .env
+   mv env-example .env
    # Update
    # CoinGecko Setup
    
@@ -41,7 +41,7 @@ A containerized web application for managing cryptocurrency records using FastAP
    KE_COINGECKO_API_KEY=**YOUR_KEY_HERE**
 
    # Option B)
-   # No API key (works, but very limited)
+   # No API key (should work, but no guarantees)
    KE_COINGECKO_API_DEMO_USER=false
    KE_COINGECKO_API_KEY=
 
@@ -55,12 +55,12 @@ A containerized web application for managing cryptocurrency records using FastAP
    KE_DATABASE_NAME=qrypto
    KE_DATABASE_HOST=0.0.0.0
    KE_DATABASE_PORT=5432
-
    ```
 
 2. **Build and start the Docker containers**
    ```bash
    docker compose build
+   docker compose run --rm test
    docker compose up
    ```
 
@@ -75,7 +75,7 @@ A containerized web application for managing cryptocurrency records using FastAP
 
 ---
 
-## 🌞 Setup (Development with Virtual Environment)
+## 🌞 Setup (Development with Virtual Environment + PIP)
 
 1. **Clone the repository**
    ```bash
@@ -83,25 +83,29 @@ A containerized web application for managing cryptocurrency records using FastAP
    cd qrypto
    ```
 
-2. **Create and activate a virtual environment**
+2. **Install uv, Create a virtual environment**
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   uv venv .venv
+   source .venv/bin/activate
+   uv python install 3.13
    ```
 
 3. **Install dependencies**
    ```bash
-   pip install -r requirements.txt
+   uv sync
+   uv pip install -r pyproject.toml
    ```
 
 4. **Run the backend API**
    ```bash
-   uvicorn app.main:app --reload
+   uvicorn src.qrypt.main:app --reload
    ```
 
 5. **Run the frontend UI**
    ```bash
-   streamlit run app/frontend.py
+   streamlit run src/qrypt/ui/app.py
    ```
 
 6. **Access the application**

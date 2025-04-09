@@ -36,5 +36,14 @@ services:
     ports:
       - "6379:6379"
 
+  test:
+    build: .
+    container_name: qrypto-test
+    command: pytest
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
 volumes:
   postgres_data:
