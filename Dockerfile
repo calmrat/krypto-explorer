@@ -30,6 +30,7 @@ COPY start.sh .
 COPY .env .
 COPY staticserve .
 COPY localcache .
+COPY qrypt.db .
 
 RUN uv pip install --system -r requirements.txt
 #RUN uv pip install --system -e .

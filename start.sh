@@ -8,7 +8,7 @@ echo Initializing database
 uv run init_db
 echo DONE
 
-printenv
+# printenv
 
 echo Pulling tokens
 uv run pull_tokens

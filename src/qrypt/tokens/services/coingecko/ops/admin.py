@@ -82,9 +82,9 @@ def pull_tokens() -> Tuple[list, list]:
     k = 0
     _skip = False
     for token in _tokens:
-        if k % 1000 == 0:
+        if k % 500 == 0:
             log.debug("Processing token %d of %d", k, len(_tokens))
-            k += 1
+        k += 1
 
         _platforms = token.get("platforms", {})
 
