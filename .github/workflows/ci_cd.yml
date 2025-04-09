@@ -43,12 +43,13 @@ jobs:
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | bash
           echo 'export PATH="$HOME/.local/bin:$PATH"' >> $GITHUB_ENV
+          
 
       - name: 📦 Install dependencies
         run: |
           uv venv .venv
           source .venv/bin/activate
-          uv python install 3.13
+          echo 'export PATH=".venv/bin:$PATH" >> $GITHUB_ENV
           uv sync
           uv pip install -r pyproject.toml
           uv pip install -e .
