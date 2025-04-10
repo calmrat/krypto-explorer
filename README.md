@@ -100,6 +100,7 @@ A containerized web application for managing cryptocurrency records using FastAP
 
 4. **Run the backend API**
    ```bash
+   uv run init_db
    uvicorn src.qrypt.main:app --reload
    ```
 
