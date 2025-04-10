@@ -18,7 +18,7 @@ A containerized web application for managing cryptocurrency records using FastAP
 
 - **Backend**: FastAPI, SQLAlchemy, PostgreSQL
 - **Frontend**: Streamlit
-- **Caching**: Local JSON
+- **Caching**: Redis / JSON (local/s3)
 - **External API**: [CoinGecko API](https://www.coingecko.com/en/api/documentation)
 - **Containerization**: Docker
 
@@ -113,3 +113,8 @@ A containerized web application for managing cryptocurrency records using FastAP
 6. **Access the application**
    - The backend API will be available at `http://localhost:8000`.
    - The frontend UI will be available at `http://localhost:8501`.
+
+
+   ## 🖼️ UI Preview
+
+   <img src="staticserve/images/ui-1.png" width="300">
