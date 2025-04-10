@@ -95,8 +95,11 @@ def sync_tokens() -> None:
 
 tabs = ["📋 View All", "➕ Add Token", "✏️ Update/Delete", "🔍 Search", "🛠️ Admin Panel"]
 
+if "next_active_tab" in st.session_state:
+    st.session_state["active_tab"] = st.session_state["next_active_tab"]
+    del st.session_state["next_active_tab"]
 # Set default active tab
-if "active_tab" not in st.session_state:
+elif "active_tab" not in st.session_state:
     st.session_state.active_tab = "📋 View All"
 
 # Create tab selector with default value
@@ -172,7 +175,7 @@ if tab_selector == "📋 View All":
         with col2:
             if st.button("📝 Update", key=f"view_update_{t.id}"):
                 st.session_state["update_selected_token"] = t.id
-                st.session_state["active_tab"] = "✏️ Update/Delete"
+                st.session_state["next_active_tab"] = "✏️ Update/Delete"
                 delayed_rerun()
 
         with col3:
@@ -367,7 +370,7 @@ elif tab_selector == "🔍 Search":
             with col2:
                 if st.button("📝 Update", key=f"update_{t.id}"):
                     st.session_state["update_selected_token"] = t.id
-                    st.session_state["active_tab"] = "✏️ Update/Delete"
+                    st.session_state["next_active_tab"] = "✏️ Update/Delete"
                     delayed_rerun()  # redirect to Update tab
 
             with col3:
